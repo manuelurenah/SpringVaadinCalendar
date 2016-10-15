@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpringVaadinCalendar.iml" filepath="$PROJECT_DIR$/.idea/modules/SpringVaadinCalendar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpringVaadinCalendar_main.iml" filepath="$PROJECT_DIR$/.idea/modules/SpringVaadinCalendar_main.iml" group="SpringVaadinCalendar" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpringVaadinCalendar_test.iml" filepath="$PROJECT_DIR$/.idea/modules/SpringVaadinCalendar_test.iml" group="SpringVaadinCalendar" />
+    </modules>
+  </component>
+</project>
