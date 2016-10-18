@@ -31,7 +31,7 @@ public class User implements Serializable {
     private String password;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Event> events = new ArrayList<>();
+    private List<CustomEvent> customEvents = new ArrayList<>();
 
     public User() {
     }
@@ -83,11 +83,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public List<Event> getEvents() {
-        return events;
+    public List<CustomEvent> getCustomEvents() {
+        return customEvents;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void setCustomEvents(List<CustomEvent> customEvents) {
+        this.customEvents = customEvents;
     }
 }
