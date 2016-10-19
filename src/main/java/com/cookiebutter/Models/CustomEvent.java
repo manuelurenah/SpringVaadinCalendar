@@ -6,6 +6,7 @@ import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,18 +20,20 @@ public class CustomEvent implements CalendarEvent, EditableCalendarEvent, EventC
     @GeneratedValue
     private long id;
     @Column
-    @NotNull
+    @Size(min = 3, max = 50)
     private String caption;
     @Column
+    @Size(max = 255)
     private String description;
     @Column
     private String styleName;
     @Column
-    @NotNull
     private boolean isAllDay;
     @Column
+    @Temporal(value = TemporalType.DATE)
     private Date start;
     @Column
+    @Temporal(value = TemporalType.DATE)
     private Date end;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

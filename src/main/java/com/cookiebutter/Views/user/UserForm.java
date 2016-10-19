@@ -2,11 +2,9 @@ package com.cookiebutter.Views.user;
 
 import com.cookiebutter.Models.User;
 import com.cookiebutter.Services.UserService;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.UIScope;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +31,35 @@ public class UserForm extends FormLayout {
     Button cancel = new Button("Cancel");
 
     public UserForm() {
+        setSizeUndefined();
+        setMargin(true);
+        setSpacing(true);
+
+        update.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        update.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                Notification.show("Should update current user", Notification.Type.TRAY_NOTIFICATION);
+            }
+        });
+
+        cancel.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                Notification.show("Should close modal", Notification.Type.TRAY_NOTIFICATION);
+            }
+        });
+
         HorizontalLayout buttons = new HorizontalLayout();
+        buttons.setSpacing(true);
+        buttons.addComponent(update);
+        buttons.addComponent(cancel);
+
+        name.setCaption("First Name:");
+        lastname.setCaption("Last Name:");
+        email.setCaption("E-Mail:");
+
+        addComponents(name, lastname, email, buttons);
     }
 
 }

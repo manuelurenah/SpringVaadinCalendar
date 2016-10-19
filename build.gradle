@@ -1,6 +1,3 @@
-group 'com.cookiebutter'
-version '1.0-SNAPSHOT'
-
 buildscript {
     repositories {
         mavenCentral()
@@ -8,6 +5,15 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
     }
+}
+
+plugins {
+    id 'fi.jasoft.plugin.vaadin' version '1.0'
+}
+
+// Vaadin plugin requires Gradle 3.0+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
 }
 
 apply plugin: 'java'
@@ -43,3 +49,7 @@ dependencyManagement {
         mavenBom "com.vaadin:vaadin-bom:7.7.3"
     }
 }
+
+// Configure bootRun to ensure the widgetset and theme is compiled
+bootRun.dependsOn 'vaadinCompile', 'vaadinThemeCompile'
+

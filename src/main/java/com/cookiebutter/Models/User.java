@@ -2,6 +2,7 @@ package com.cookiebutter.Models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +19,10 @@ public class User implements Serializable {
     @GeneratedValue
     private long id;
     @Column
-    @NotNull
+    @Size(min = 3, max = 25)
     private String name;
     @Column
-    @NotNull
+    @Size(min = 2, max = 25)
     private String lastname;
     @Column
     @NotNull
