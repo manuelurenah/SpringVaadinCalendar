@@ -15,6 +15,7 @@ import java.util.List;
  */
 
 @Service
+@Transactional
 public class EventService {
 
     @Autowired
@@ -26,6 +27,10 @@ public class EventService {
 
     public List<CustomEvent> findAllByStartAndEndDates(Date start, Date end) {
         return eventRepository.findAllByStartAndEnd(start, end);
+    }
+
+    public List<CustomEvent> findBetween(Date startDate, Date endDate) {
+        return eventRepository.findByDatesBetween(startDate, endDate);
     }
 
     @Transactional

@@ -14,10 +14,13 @@ import com.vaadin.ui.Calendar.TimeFormat;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
+import com.vaadin.ui.components.calendar.event.BasicEvent;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
+import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
 import java.util.Date;
@@ -37,6 +40,10 @@ public class MainUI extends UI {
     private EventService eventService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CustomEventProvider customEventProvider;
+    @Autowired
+    private EventForm eventForm;
 
     File baseDir = VaadinService.getCurrent().getBaseDirectory();
     Button configBtn = new Button(new FileResource(new File(baseDir.getAbsolutePath() + "/icons/Settings-24.png")));
@@ -46,9 +53,10 @@ public class MainUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
         Page.getCurrent().setTitle("Spring Vaadin Calendar");
+        eventForm.setCalendar(calendar);
 
         setUpCalendar();
-        setUpButtonModalView(addBtn, "Add New Event", new EventForm());
+        setUpButtonModalView(addBtn, "Add New Event", eventForm);
         setUpButtonModalView(configBtn, "Update User Info", new UserForm());
 
         VerticalLayout layout = new VerticalLayout();
@@ -57,10 +65,58 @@ public class MainUI extends UI {
         layout.setSizeFull();
 
         HorizontalLayout buttons = new HorizontalLayout();
+        HorizontalLayout calendarButtons = new HorizontalLayout();
+        HorizontalLayout optionButtons = new HorizontalLayout();
         buttons.setSizeUndefined();
         buttons.setSpacing(true);
 
-        buttons.addComponents(addBtn, configBtn);
+        // Calendar buttons:
+        Button monthCalendarButton = new Button("Monthly Calendar");
+        monthCalendarButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                // set month to calendar stuff:
+                calendar.setStartDate(new GregorianCalendar().getTime());
+                GregorianCalendar calEnd = new GregorianCalendar();
+                calEnd.set(java.util.Calendar.DATE, 1);
+                calEnd.roll(java.util.Calendar.DATE, -1);
+                calendar.setEndDate(calEnd.getTime());
+            }
+        });
+
+        Button weekCalendarButton = new Button("Weekly Calendar");
+        weekCalendarButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                GregorianCalendar weekstart = new GregorianCalendar();
+                GregorianCalendar weekend   = new GregorianCalendar();
+                weekstart.setFirstDayOfWeek(java.util.Calendar.SUNDAY);
+                weekstart.set(java.util.Calendar.HOUR_OF_DAY, 0);
+                weekstart.set(java.util.Calendar.DAY_OF_WEEK,
+                        java.util.Calendar.SUNDAY);
+                weekend.set(java.util.Calendar.HOUR_OF_DAY, 23);
+                weekend.set(java.util.Calendar.DAY_OF_WEEK,
+                        java.util.Calendar.SATURDAY);
+                calendar.setStartDate(weekstart.getTime());
+                calendar.setEndDate(weekend.getTime());
+            }
+        });
+
+        Button dayCalendarButton = new Button("Daily View");
+        dayCalendarButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                GregorianCalendar today = new GregorianCalendar();
+                calendar.setStartDate(today.getTime());
+                calendar.setEndDate(today.getTime());
+            }
+        });
+
+        calendarButtons.addComponents(monthCalendarButton, weekCalendarButton, dayCalendarButton );
+
+
+        optionButtons.addComponents(addBtn, configBtn);
+        buttons.addComponents(calendarButtons, optionButtons);
 
         layout.addComponent(buttons);
         layout.addComponent(calendar);
@@ -71,6 +127,9 @@ public class MainUI extends UI {
     }
 
     private void setUpCalendar() {
+        //Setup event provider.
+        calendar.setEventProvider(customEventProvider);
+
         calendar.setHandler(new EventClickHandler() {
             @Override
             public void eventClick(EventClick event) {
@@ -90,10 +149,10 @@ public class MainUI extends UI {
 
             protected void setDates(EditableCalendarEvent event,
                                     Date start, Date end) {
-                if (isThisMonth(javaCalendar, start)
-                        && isThisMonth(javaCalendar, end)) {
-                    super.setDates(event, start, end);
-                }
+                CustomEvent e = (CustomEvent) event;
+                e.setStart(start);
+                e.setEnd(end);
+                eventService.save(e);
             }
         });
 
@@ -102,14 +161,26 @@ public class MainUI extends UI {
 
             protected void setDates(EditableCalendarEvent event,
                                     Date start, Date end) {
-                long eventLength = end.getTime() - start.getTime();
-                if (eventLength <= twelveHoursInMs) {
-                    super.setDates(event, start, end);
-                }
+                CustomEvent e = (CustomEvent) event;
+                e.setStart(start);
+                e.setEnd(end);
+                eventService.save(e);
+            }
+        });
+        calendar.setHandler(new CalendarComponentEvents.RangeSelectHandler() {
+            @Override
+            public void rangeSelect(CalendarComponentEvents.RangeSelectEvent event) {
+                eventForm.setDates(event.getStart(), event.getEnd());
+                openModalView("Add New Event", eventForm);
             }
         });
 
         calendar.setLocale(Locale.US);
+        calendar.setStartDate(new GregorianCalendar().getTime());
+        GregorianCalendar calEnd = new GregorianCalendar();
+        calEnd.set(java.util.Calendar.DATE, 1);
+        calEnd.roll(java.util.Calendar.DATE, -1);
+        calendar.setEndDate(calEnd.getTime());
         calendar.setTimeFormat(TimeFormat.Format12H);
         calendar.setFirstVisibleDayOfWeek(1);
         calendar.setLastVisibleDayOfWeek(7);
@@ -117,20 +188,22 @@ public class MainUI extends UI {
         calendar.setLastVisibleHourOfDay(20);
         calendar.setSizeFull();
     }
+    private void openModalView(String title, FormLayout form) {
+        Window modalView = new Window(title);
+        modalView.center();
+        modalView.setResizable(false);
+        modalView.setModal(true);
+        modalView.setClosable(true);
+        modalView.setDraggable(false);
+        modalView.setContent(form);
 
+        addWindow(modalView);
+    }
     private void setUpButtonModalView(Button button, String title, FormLayout form) {
         button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                Window modalView = new Window(title);
-                modalView.center();
-                modalView.setResizable(false);
-                modalView.setModal(true);
-                modalView.setClosable(true);
-                modalView.setDraggable(false);
-                modalView.setContent(form);
-
-                addWindow(modalView);
+                openModalView(title, form);
             }
         });
     }

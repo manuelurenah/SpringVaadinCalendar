@@ -1,11 +1,16 @@
 package com.cookiebutter.Views.event;
 
+import com.cookiebutter.Models.CustomEvent;
 import com.cookiebutter.Services.EventService;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * Created by MEUrena on 10/19/16.
@@ -14,14 +19,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @UIScope
+@SpringUI
 public class EventForm extends FormLayout {
 
     @Autowired
     EventService eventService;
 
-    DateField start = new DateField("Start Date");
-    DateField end = new DateField("End Date");
-    CheckBox allday = new CheckBox("All Day", false);
+    Calendar calendar;
+
+    DateField start = new PopupDateField("Start Date");
+    DateField end = new PopupDateField("End Date");
 
     TextField caption = new TextField("Caption");
     TextArea description = new TextArea("Description");
@@ -29,29 +36,49 @@ public class EventForm extends FormLayout {
     Button addBtn = new Button("Add");
     Button cancelBtn = new Button("Cancel");
 
+    public EventForm(Date startDate, Date endDate) {
+        start.setValue(startDate);
+        end.setValue(endDate);
+        setup();
+    }
+
     public EventForm() {
+        start.setValue(new Date());
+        end.setValue(new Date());
+        setup();
+
+    }
+
+    private void setup() {
+
         setSizeUndefined();
         setMargin(true);
         setSpacing(true);
-
+        start.setResolution(Resolution.MINUTE);
+        end.setResolution(Resolution.MINUTE);
         addBtn.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         addBtn.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                Notification.show("Should add new event with task", Notification.Type.TRAY_NOTIFICATION);
+                CustomEvent e = new CustomEvent();
+                e.setDescription(description.getValue());
+                e.setCaption(caption.getValue());
+                e.setStart(start.getValue());
+                e.setEnd(end.getValue());
+                e.setAllDay(false);
+                calendar.addEvent(e);
+                ((Window)getParent()).close();
             }
         });
+
+
 
         cancelBtn.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                Notification.show("Should close modal", Notification.Type.TRAY_NOTIFICATION);
+                ((Window)getParent()).close();
             }
         });
-
-        allday.addValueChangeListener(e -> Notification.show("Value changed:",
-                String.valueOf(e.getProperty().getValue()),
-                Notification.Type.TRAY_NOTIFICATION));
 
         HorizontalLayout buttons = new HorizontalLayout(addBtn, cancelBtn);
         buttons.setSpacing(true);
@@ -61,8 +88,19 @@ public class EventForm extends FormLayout {
         caption.setCaption("Caption:");
         description.setCaption("Description:");
 
-        addComponents(start, end, allday, caption, description, buttons);
-
+        addComponents(start, end, caption, description, buttons);
     }
 
+    public void setDates(Date startDate, Date endDate) {
+        start.setValue(startDate);
+        end.setValue(endDate);
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+    }
 }

@@ -1,8 +1,10 @@
 package com.cookiebutter.Views.user;
 
+import com.cookiebutter.Models.CustomEventProvider;
 import com.cookiebutter.Models.User;
 import com.cookiebutter.Services.UserService;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @UIScope
+@SpringUI
 public class UserForm extends FormLayout {
 
     @Autowired

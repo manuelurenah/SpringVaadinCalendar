@@ -3,6 +3,7 @@ package com.cookiebutter.Models;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,10 +31,10 @@ public class CustomEvent implements CalendarEvent, EditableCalendarEvent, EventC
     @Column
     private boolean isAllDay;
     @Column
-    @Temporal(value = TemporalType.DATE)
+    @DateTimeFormat
     private Date start;
     @Column
-    @Temporal(value = TemporalType.DATE)
+    @DateTimeFormat
     private Date end;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
