@@ -31,6 +31,8 @@ public class CustomEvent implements CalendarEvent, EditableCalendarEvent, EventC
     @Column
     private boolean isAllDay;
     @Column
+    private boolean notified = false;
+    @Column
     @DateTimeFormat
     private Date start;
     @Column
@@ -148,5 +150,13 @@ public class CustomEvent implements CalendarEvent, EditableCalendarEvent, EventC
         for (EventChangeListener listener : listeners) {
             listener.eventChange(event);
         }
+    }
+
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 }

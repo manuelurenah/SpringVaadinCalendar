@@ -16,6 +16,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '3.0'
 }
 
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -40,9 +41,14 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-mail')
     compile('org.springframework.boot:spring-boot-starter-security')
+    // https://mvnrepository.com/artifact/com.sparkpost/sparkpost-lib
+    compile group: 'com.sparkpost', name: 'sparkpost-lib', version: '0.16.1'
     compile('com.vaadin:vaadin-spring-boot-starter:1.0.2')
     runtime('com.h2database:h2')
+
 }
+
+
 
 dependencyManagement {
     imports {
@@ -52,4 +58,5 @@ dependencyManagement {
 
 // Configure bootRun to ensure the widgetset and theme is compiled
 bootRun.dependsOn 'vaadinCompile', 'vaadinThemeCompile'
+
 

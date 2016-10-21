@@ -1,9 +1,11 @@
 package com.cookiebutter;
 
+import org.apache.log4j.BasicConfigurator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -17,9 +19,12 @@ import java.util.Locale;
  * All rights reserved.
  */
 @SpringBootApplication
+@EnableScheduling
 public class Application extends WebMvcConfigurerAdapter{
 
     public static void main(String[] args) {
+
+        BasicConfigurator.configure();
         SpringApplication.run(Application.class, args);
     }
 
