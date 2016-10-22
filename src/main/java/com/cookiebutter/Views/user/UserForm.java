@@ -39,19 +39,11 @@ public class UserForm extends FormLayout {
         setSpacing(true);
 
         update.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        update.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                Notification.show("Should update current user", Notification.Type.TRAY_NOTIFICATION);
-            }
-        });
+        update.addClickListener((Button.ClickListener)
+                event -> Notification.show("Should update current user", Notification.Type.TRAY_NOTIFICATION));
 
-        cancel.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                Notification.show("Should close modal", Notification.Type.TRAY_NOTIFICATION);
-            }
-        });
+        cancel.addClickListener((Button.ClickListener)
+                event -> Notification.show("Should close modal", Notification.Type.TRAY_NOTIFICATION));
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);

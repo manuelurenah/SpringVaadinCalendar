@@ -2,6 +2,7 @@ package com.cookiebutter.Views;
 
 import com.cookiebutter.Models.CustomEvent;
 import com.cookiebutter.Models.CustomEventProvider;
+import com.cookiebutter.Models.User;
 import com.cookiebutter.Services.EventService;
 import com.cookiebutter.Services.UserService;
 import com.cookiebutter.Views.event.EventForm;
@@ -52,6 +53,12 @@ public class MainUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
+
+        User currentUser = (User) VaadinService.getCurrentRequest().getWrappedSession().getAttribute("current_user");
+
+        System.out.print("Got the user: ");
+        System.out.println(currentUser);
+
         Page.getCurrent().setTitle("Spring Vaadin Calendar");
         eventForm.setCalendar(calendar);
 
@@ -123,7 +130,11 @@ public class MainUI extends UI {
         layout.setComponentAlignment(buttons, Alignment.TOP_RIGHT);
         layout.setExpandRatio(calendar, 1);
 
-        setContent(layout);
+        if (currentUser != null) {
+            setContent(layout);
+        } else {
+            setContent(new LoginUI());
+        }
     }
 
     private void setUpCalendar() {
