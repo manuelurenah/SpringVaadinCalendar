@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by MEUrena on 10/18/16.
  * All rights reserved.
@@ -20,6 +22,15 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public boolean exists(String email) {
+        User user = userRepository.findByEmail(email);
+        return user != null;
+    }
+
+    public List<User> findAll() {
+        return (List<User>) userRepository.findAll();
     }
 
     @Transactional

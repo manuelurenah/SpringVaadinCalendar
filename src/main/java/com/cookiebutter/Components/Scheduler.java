@@ -25,11 +25,11 @@ public class Scheduler {
         String API_KEY = "4243effa31c039d6175cc6c511f3b8c991641172";
         com.sparkpost.Client client = new com.sparkpost.Client(API_KEY);
 
-        client.sendMessage(
-                "lrojas94@sparkpostbox.com",
-                "lrojas94@gmail.com",
-                "The subject of the message",
-                "The text part of the email",
-                "<b>The HTML part of the email</b>");
+//        client.sendMessage(
+//                "lrojas94@sparkpostbox.com",
+//                "lrojas94@gmail.com",
+//                "The subject of the message",
+//                "The text part of the email",
+//                "<b>The HTML part of the email</b>");
     }
 }

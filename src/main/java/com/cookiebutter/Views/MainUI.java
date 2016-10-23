@@ -45,6 +45,8 @@ public class MainUI extends UI {
     private CustomEventProvider customEventProvider;
     @Autowired
     private EventForm eventForm;
+    @Autowired
+    private LoginUI login;
 
     File baseDir = VaadinService.getCurrent().getBaseDirectory();
     Button configBtn = new Button(new FileResource(new File(baseDir.getAbsolutePath() + "/icons/Settings-24.png")));
@@ -133,7 +135,7 @@ public class MainUI extends UI {
         if (currentUser != null) {
             setContent(layout);
         } else {
-            setContent(new LoginUI());
+            setContent(login);
         }
     }
 

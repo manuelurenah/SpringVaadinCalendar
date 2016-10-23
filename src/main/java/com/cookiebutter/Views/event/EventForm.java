@@ -19,7 +19,6 @@ import java.util.Date;
 
 @Component
 @UIScope
-@SpringUI
 public class EventForm extends FormLayout {
 
     @Autowired

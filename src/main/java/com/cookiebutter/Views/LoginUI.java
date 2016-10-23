@@ -11,6 +11,8 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Created by MEUrena on 10/21/16.
  * All rights reserved.
@@ -22,8 +24,8 @@ import org.springframework.stereotype.Component;
 public class LoginUI extends FormLayout {
 
     @Autowired
-    UserService userService;
-    User user;
+    private UserService userService;
+    private User user;
 
     TextField usernameField = new TextField("E-mail");
     PasswordField passwordField = new PasswordField("Password");
@@ -43,7 +45,7 @@ public class LoginUI extends FormLayout {
                 System.out.println("Email: " + email);
                 String password = passwordField.getValue();
                 System.out.println("Pass: " + password);
-                User user = userService.findByEmail(email);
+                user = userService.findByEmail(email);
                 if (user != null) {
                     if (user.getPassword().equals(password)) {
                         saveUserInSession(LoginUI.this, user);
@@ -71,6 +73,7 @@ public class LoginUI extends FormLayout {
 
         ui.getSession().setAttribute("current_user", user);
         VaadinService.getCurrentRequest().getWrappedSession().setAttribute("current_user", user);
+        getUI().getPage().setLocation("/");
     }
 
     private void showErrorMessage(String message) {
