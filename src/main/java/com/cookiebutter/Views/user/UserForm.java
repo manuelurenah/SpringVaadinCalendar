@@ -3,6 +3,7 @@ package com.cookiebutter.Views.user;
 import com.cookiebutter.Models.CustomEventProvider;
 import com.cookiebutter.Models.User;
 import com.cookiebutter.Services.UserService;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.UIScope;
@@ -39,11 +40,14 @@ public class UserForm extends FormLayout {
         setSpacing(true);
 
         update.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        update.addClickListener((Button.ClickListener)
-                event -> Notification.show("Should update current user", Notification.Type.TRAY_NOTIFICATION));
+        update.addClickListener((Button.ClickListener) event -> {
+            userService.save(user);
+            ((Window)getParent()).close();
+        });
 
-        cancel.addClickListener((Button.ClickListener)
-                event -> Notification.show("Should close modal", Notification.Type.TRAY_NOTIFICATION));
+        cancel.addClickListener((Button.ClickListener) event -> {
+            ((Window)getParent()).close();
+        });
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);
@@ -55,6 +59,11 @@ public class UserForm extends FormLayout {
         email.setCaption("E-Mail:");
 
         addComponents(name, lastname, email, buttons);
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        BeanFieldGroup.bindFieldsUnbuffered(user, this);
     }
 
 }

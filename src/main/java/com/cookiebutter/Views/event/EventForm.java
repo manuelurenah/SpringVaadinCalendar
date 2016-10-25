@@ -1,7 +1,9 @@
 package com.cookiebutter.Views.event;
 
 import com.cookiebutter.Models.CustomEvent;
+import com.cookiebutter.Models.User;
 import com.cookiebutter.Services.EventService;
+import com.cookiebutter.Services.UserService;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.spring.annotation.SpringUI;
@@ -56,27 +58,19 @@ public class EventForm extends FormLayout {
         start.setResolution(Resolution.MINUTE);
         end.setResolution(Resolution.MINUTE);
         addBtn.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        addBtn.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                CustomEvent e = new CustomEvent();
-                e.setDescription(description.getValue());
-                e.setCaption(caption.getValue());
-                e.setStart(start.getValue());
-                e.setEnd(end.getValue());
-                e.setAllDay(false);
-                calendar.addEvent(e);
-                ((Window)getParent()).close();
-            }
+        addBtn.addClickListener((Button.ClickListener) event -> {
+            CustomEvent e = new CustomEvent();
+            e.setDescription(description.getValue());
+            e.setCaption(caption.getValue());
+            e.setStart(start.getValue());
+            e.setEnd(end.getValue());
+            e.setAllDay(false);
+            calendar.addEvent(e);
+            ((Window)getParent()).close();
         });
 
-
-
-        cancelBtn.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                ((Window)getParent()).close();
-            }
+        cancelBtn.addClickListener((Button.ClickListener) event -> {
+            ((Window)getParent()).close();
         });
 
         HorizontalLayout buttons = new HorizontalLayout(addBtn, cancelBtn);

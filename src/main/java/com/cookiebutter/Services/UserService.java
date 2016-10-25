@@ -2,6 +2,7 @@ package com.cookiebutter.Services;
 
 import com.cookiebutter.Models.User;
 import com.cookiebutter.Repositories.UserRepository;
+import com.vaadin.server.VaadinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,10 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public User getCurrentUser() {
+        return (User) VaadinService.getCurrentRequest().getWrappedSession().getAttribute("current_user");
+    }
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
