@@ -14,6 +14,6 @@ import java.util.List;
 public interface EventRepository extends CrudRepository<CustomEvent, Long> {
     List<CustomEvent> findAllByStartAndEnd(Date start, Date end);
     @Query("select e from CustomEvent e " +
-            "where e.start between ?1 and ?2")
+            "where e.start between ?1 and ?2 and e.notified = false")
     List<CustomEvent> findByDatesBetween(Date startDate, Date endDate);
 }

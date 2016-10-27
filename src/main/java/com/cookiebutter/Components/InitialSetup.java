@@ -29,7 +29,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
             User admin = new User();
             admin.setName("Admin");
             admin.setLastname("Admin");
-            admin.setEmail("admin@me.com");
+            admin.setEmail("lrojas94@gmail.com");
             admin.setPassword("admin");
 
             userService.save(admin);

@@ -38,7 +38,7 @@ public class Scheduler {
         Date begin = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(begin);
-        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.HOUR, 1);
         Date end = cal.getTime();
         List<CustomEvent> pendingEvents = eventService.findBetween(begin, end);
 
