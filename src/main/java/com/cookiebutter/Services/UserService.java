@@ -25,6 +25,10 @@ public class UserService {
         return (User) VaadinService.getCurrentRequest().getWrappedSession().getAttribute("current_user");
     }
 
+    public User findOne() {
+        return userRepository.findOne((long) 1);
+    }
+
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }

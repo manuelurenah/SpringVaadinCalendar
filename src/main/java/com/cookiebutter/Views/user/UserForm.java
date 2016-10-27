@@ -5,6 +5,7 @@ import com.cookiebutter.Models.User;
 import com.cookiebutter.Services.UserService;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
@@ -42,6 +43,7 @@ public class UserForm extends FormLayout {
         update.setClickShortcut(ShortcutAction.KeyCode.ENTER);
         update.addClickListener((Button.ClickListener) event -> {
             userService.save(user);
+            VaadinService.getCurrentRequest().getWrappedSession().setAttribute("current_user", user);
             ((Window)getParent()).close();
         });
 

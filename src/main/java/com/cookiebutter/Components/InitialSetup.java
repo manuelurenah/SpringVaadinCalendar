@@ -25,7 +25,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
             return;
         }
 
-        if(!userService.exists("admin@me.com")) {
+        if(!userService.exists("lrojas94@gmail.com")) {
             User admin = new User();
             admin.setName("Admin");
             admin.setLastname("Admin");

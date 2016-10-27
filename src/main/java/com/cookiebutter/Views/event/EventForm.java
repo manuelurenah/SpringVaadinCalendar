@@ -47,7 +47,6 @@ public class EventForm extends FormLayout {
         start.setValue(new Date());
         end.setValue(new Date());
         setup();
-
     }
 
     private void setup() {
@@ -66,6 +65,7 @@ public class EventForm extends FormLayout {
             e.setEnd(end.getValue());
             e.setAllDay(false);
             calendar.addEvent(e);
+            eventService.save(e);
             ((Window)getParent()).close();
         });
 
@@ -77,7 +77,7 @@ public class EventForm extends FormLayout {
         buttons.setSpacing(true);
 
         start.setCaption("Start Date:");
-        end.setCaption("Start Date:");
+        end.setCaption("End Date:");
         caption.setCaption("Caption:");
         description.setCaption("Description:");
 
